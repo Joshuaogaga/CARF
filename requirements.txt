@@ -1,18 +1,17 @@
-# Build dependencies
-setuptools>=60.0.0
-wheel>=0.37.0
-pip>=21.3.0
+# Aggressive build dependencies for Python 3.13
+setuptools>=75.0.0
+wheel>=0.45.0
+pip>=24.0
+Cython>=3.0.0
 
-# Core dependencies based on your imports
-Flask==2.3.3
-pandas==2.0.3
-numpy==1.24.3
-plotly==5.17.0
-scikit-learn==1.3.0
-
-# Flask dependencies (auto-installed but pinned for consistency)
-Werkzeug==2.3.7
-Jinja2==3.1.2
-MarkupSafe==2.1.3
-click==8.1.7
-itsdangerous==2.1.2
+# Core packages with relaxed versions for better compatibility
+Flask>=2.3.0,<3.0.0
+pandas>=2.0.0,<2.3.0
+numpy>=1.24.0,<2.0.0
+plotly>=5.17.0,<6.0.0
+scikit-learn>=1.3.0,<1.6.0
+Werkzeug>=2.3.0,<3.0.0
+Jinja2>=3.1.0,<4.0.0
+MarkupSafe>=2.1.0,<3.0.0
+click>=8.1.0,<9.0.0
+itsdangerous>=2.1.0,<3.0.0
