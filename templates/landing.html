@@ -92,7 +92,7 @@
         <div class="row">
             <div class="col-12 text-center mb-4">
                 <h2 class="text-primary">Get Started</h2>
-                <p class="lead">Upload your healthcare data files to begin analysis</p>
+                <p class="lead">Upload your healthcare data files or try our demo to see the platform in action</p>
             </div>
         </div>
         
@@ -100,10 +100,26 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
+                        <!-- Demo Option First -->
+                        <div class="text-center mb-4 p-3 bg-success bg-opacity-10 rounded">
+                            <h5 class="text-success mb-2">
+                                <i class="fas fa-rocket me-2"></i>Try Demo First
+                            </h5>
+                            <p class="mb-3">See the platform in action with sample healthcare data</p>
+                            <a href="{{ url_for('load_demo') }}" class="btn btn-success btn-lg">
+                                <i class="fas fa-magic me-2"></i>Load Demo Data
+                            </a>
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <span class="badge bg-secondary">OR</span>
+                        </div>
+                        
+                        <!-- Upload Option -->
                         <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="files" class="form-label">
-                                    <i class="fas fa-file-csv me-2"></i>Select Healthcare Data Files
+                                    <i class="fas fa-file-csv me-2"></i>Upload Your Own Data
                                 </label>
                                 <input type="file" class="form-control" id="files" name="files" multiple accept=".csv,.xlsx,.xls">
                                 <div class="form-text">
@@ -121,13 +137,10 @@
                                 </ul>
                             </div>
                             
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                            <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-upload me-2"></i>Upload Data
+                                    <i class="fas fa-upload me-2"></i>Upload My Data
                                 </button>
-                                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
-                                    <i class="fas fa-play me-2"></i>Use Demo Data
-                                </a>
                             </div>
                         </form>
                     </div>
@@ -135,7 +148,6 @@
             </div>
         </div>
     </section>
-
     <!-- Statistics Section -->
     <section class="py-5">
         <div class="row text-center">

@@ -1138,6 +1138,36 @@ def recommendations():
                          recommendations_data=recommendations_data, 
                          compliance_status=compliance_status)
 
+@app.route('/load_demo')
+def load_demo():
+    try:
+        # Ensure uploads directory exists
+        upload_dir = 'uploads'
+        if not os.path.exists(upload_dir):
+            os.makedirs(upload_dir)
+        
+        # Copy demo files to uploads directory  
+        demo_files = [
+            'healthcare_client_data.csv',
+            'monthly_quality_metrics.csv'
+        ]
+        
+        for demo_file in demo_files:
+            if os.path.exists(demo_file):
+                filename = os.path.basename(demo_file)
+                shutil.copy(demo_file, os.path.join(upload_dir, filename))
+            else:
+                flash(f'Demo file {demo_file} not found!', 'error')
+                return redirect(url_for('landing'))
+        
+        flash('Demo data loaded successfully! Explore the analytics below.', 'success')
+        return redirect(url_for('index'))
+        
+    except Exception as e:
+        flash(f'Error loading demo data: {str(e)}', 'error')
+        return redirect(url_for('landing'))
+
+
 @app.route('/upload', methods=['POST'])
 def upload_files():
     """Handle file uploads"""
