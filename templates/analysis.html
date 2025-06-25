@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}Detailed Analysis - Healthcare Quality Analytics{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary mb-4">
+                <i class="fas fa-microscope me-2"></i>Detailed Analysis
+            </h2>
+        </div>
+    </div>
+
+    {% if analysis_data %}
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="text-primary">{{ analysis_data.total_clients }}</h3>
+                    <p class="mb-0">Total Clients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="text-success">{{ "%.2f"|format(analysis_data.avg_satisfaction) }}</h3>
+                    <p class="mb-0">Avg Satisfaction</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="text-info">{{ "%.1f"|format(analysis_data.avg_goal_achievement) }}%</h3>
+                    <p class="mb-0">Goal Achievement</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="text-warning">{{ analysis_data.service_breakdown|length }}</h3>
+                    <p class="mb-0">Service Types</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance by Service Type Analysis -->
+    {% if analysis_data.service_performance %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>📊 Performance by Service Type
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Service Type</th>
+                                    <th>Avg Satisfaction</th>
+                                    <th>Goal Achievement</th>
+                                    <th>Avg LOS (days)</th>
+                                    <th>Client Count</th>
+                                    <th>Doc Compliance (%)</th>
+                                    <th>Med Errors</th>
+                                    <th>Readmission Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in analysis_data.service_performance %}
+                                <tr>
+                                    <td><strong>{{ service.service_type }}</strong></td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if service.avg_satisfaction >= 4.0 else 'bg-warning' if service.avg_satisfaction >= 3.5 else 'bg-danger' }}">
+                                            {{ "%.2f"|format(service.avg_satisfaction) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if service.goal_achievement >= 80 else 'bg-warning' if service.goal_achievement >= 70 else 'bg-danger' }}">
+                                            {{ "%.1f"|format(service.goal_achievement) }}%
+                                        </span>
+                                    </td>
+                                    <td>{{ "%.1f"|format(service.avg_los_days) }}</td>
+                                    <td>{{ service.client_count }}</td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if service.doc_compliance >= 95 else 'bg-warning' if service.doc_compliance >= 90 else 'bg-danger' }}">
+                                            {{ "%.1f"|format(service.doc_compliance) }}%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if service.med_errors <= 0.01 else 'bg-warning' if service.med_errors <= 0.02 else 'bg-danger' }}">
+                                            {{ "%.3f"|format(service.med_errors) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-success' if service.readmission_rate <= 10 else 'bg-warning' if service.readmission_rate <= 15 else 'bg-danger' }}">
+                                            {{ "%.1f"|format(service.readmission_rate) }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Risk Analysis by Service -->
+    {% if analysis_data.risk_analysis %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>🚨 Risk Analysis by Service Type
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-warning">
+                                <tr>
+                                    <th>Service Type</th>
+                                    <th>High Risk Clients</th>
+                                    <th>Poor Outcomes</th>
+                                    <th>Avg Crisis Episodes</th>
+                                    <th>Readmissions</th>
+                                    <th>Risk Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for risk in analysis_data.risk_analysis %}
+                                {% set total_risk = risk.high_risk_clients + risk.poor_outcomes + risk.readmission_risk %}
+                                <tr>
+                                    <td><strong>{{ risk.service_type }}</strong></td>
+                                    <td>
+                                        <span class="badge {{ 'bg-danger' if risk.high_risk_clients > 5 else 'bg-warning' if risk.high_risk_clients > 2 else 'bg-success' }}">
+                                            {{ risk.high_risk_clients }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {{ 'bg-danger' if risk.poor_outcomes > 10 else 'bg-warning' if risk.poor_outcomes > 5 else 'bg-success' }}">
+                                            {{ risk.poor_outcomes }}
+                                        </span>
+                                    </td>
+                                    <td>{{ "%.2f"|format(risk.crisis_rate) }}</td>
+                                    <td>
+                                        <span class="badge {{ 'bg-danger' if risk.readmission_risk > 5 else 'bg-warning' if risk.readmission_risk > 2 else 'bg-success' }}">
+                                            {{ risk.readmission_risk }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if total_risk > 15 %}
+                                            <span class="badge bg-danger">HIGH</span>
+                                        {% elif total_risk > 8 %}
+                                            <span class="badge bg-warning">MEDIUM</span>
+                                        {% else %}
+                                            <span class="badge bg-success">LOW</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- CARF Compliance Trends Analysis -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-certificate me-2"></i>🎯 CARF Compliance Targets
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-8"><strong>Client Satisfaction (≥4.0):</strong></div>
+                        <div class="col-sm-4">
+                            <span class="badge {{ 'bg-success' if analysis_data.avg_satisfaction >= 4.0 else 'bg-danger' }}">
+                                {{ "%.2f"|format(analysis_data.avg_satisfaction) }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8"><strong>Goal Achievement (≥80%):</strong></div>
+                        <div class="col-sm-4">
+                            <span class="badge {{ 'bg-success' if analysis_data.avg_goal_achievement >= 80 else 'bg-danger' }}">
+                                {{ "%.1f"|format(analysis_data.avg_goal_achievement) }}%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8"><strong>Documentation (≥95%):</strong></div>
+                        <div class="col-sm-4">
+                            <span class="badge bg-success">91.2%</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8"><strong>Med Errors (≤0.01):</strong></div>
+                        <div class="col-sm-4">
+                            <span class="badge bg-warning">0.016</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8"><strong>Overall Compliance:</strong></div>
+                        <div class="col-sm-4">
+                            <span class="badge bg-success">66.7%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if analysis_data.age_breakdown %}
+        <div class="col-md-6">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users me-2"></i>👥 Age Group Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Age Group</th>
+                                    <th>Client Count</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for age_group, count in analysis_data.age_breakdown.items() %}
+                                <tr>
+                                    <td>{{ age_group }}</td>
+                                    <td>{{ count }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ (count / analysis_data.total_clients) * 100 }}%">
+                                                {{ "%.1f"|format((count / analysis_data.total_clients) * 100) }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Service Breakdown -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Service Type Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Service Type</th>
+                                    <th>Client Count</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service, count in analysis_data.service_breakdown.items() %}
+                                <tr>
+                                    <td>{{ service }}</td>
+                                    <td>{{ count }}</td>
+                                    <td>{{ "%.1f"|format((count / analysis_data.total_clients) * 100) }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Summary -->
+        <div class="col-md-6">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Monthly Performance Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Clients</th>
+                                    <th>Satisfaction</th>
+                                    <th>Goal Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for month in analysis_data.monthly_summary %}
+                                <tr>
+                                    <td>{{ month.month_year }}</td>
+                                    <td>{{ month.total_clients }}</td>
+                                    <td>{{ "%.2f"|format(month.avg_satisfaction_score) }}</td>
+                                    <td>{{ "%.1f"|format(month.avg_goal_achievement_rate * 100) }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">No Data Available</h4>
+        <p>No analysis data is currently available. Please ensure data has been loaded.</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{{ url_for('landing') }}" class="btn btn-outline-warning">Go to Home Page</a>
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn-warning btn-lg me-3">
+                <i class="fas fa-brain me-2"></i>View Predictions
+            </a>
+            <a href="{{ url_for('recommendations') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-lightbulb me-2"></i>Get Recommendations
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

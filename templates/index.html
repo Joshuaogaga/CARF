@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Healthcare Quality Analytics{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+    <div class="hero-section">
+        <div class="hero-title">Healthcare Quality Dashboard</div>
+        <div class="hero-subtitle">Comprehensive analytics for CARF accreditation and quality improvement</div>
+    </div>
+
+    <!-- KPI Cards Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Total Clients</h6>
+                            <h3 class="card-title text-primary">1,000</h3>
+                        </div>
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Avg Satisfaction</h6>
+                            <h3 class="card-title text-success">4.5/5</h3>
+                        </div>
+                        <i class="fas fa-smile fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Goal Achievement</h6>
+                            <h3 class="card-title text-info">74.7%</h3>
+                        </div>
+                        <i class="fas fa-target fa-2x text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card kpi-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">CARF Compliance</h6>
+                            <h3 class="card-title text-success">66.7%</h3>
+                        </div>
+                        <i class="fas fa-certificate fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row">
+        <!-- Chart 1: Client Satisfaction Distribution -->
+        <div class="col-lg-6 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Client Satisfaction Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="satisfaction-dist-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 2: Goal Achievement by Service Type -->
+        <div class="col-lg-6 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Goal Achievement by Service Type
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="service-goals-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chart 3: Monthly Performance Trends -->
+        <div class="col-lg-8 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-area me-2"></i>Monthly Performance Trends
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="monthly-trends-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 4: CARF Compliance Gauge -->
+        <div class="col-lg-4 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-tachometer-alt me-2"></i>CARF Compliance Rate
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="compliance-gauge-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chart 5: Average Satisfaction by Service -->
+        <div class="col-lg-4 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-heart me-2"></i>Average Satisfaction by Service
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="service-satisfaction-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 6: Client Distribution by Service -->
+        <div class="col-lg-4 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users me-2"></i>Client Distribution by Service
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="service-distribution-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 7: Length of Stay Analysis -->
+        <div class="col-lg-4 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clock me-2"></i>Length of Stay Analysis
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="length-of-stay-chart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('analysis') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-microscope me-2"></i>Detailed Analysis
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn-warning btn-lg me-3">
+                <i class="fas fa-brain me-2"></i>Predict Accreditation
+            </a>
+            <a href="{{ url_for('recommendations') }}" class="btn btn-success btn-lg">
+                <i class="fas fa-lightbulb me-2"></i>View Recommendations
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🎯 Dashboard JavaScript Loading...");
+    
+    // Get plots data from Flask
+    const plots = {{ plots | safe }};
+    console.log("📊 Backend plots available:", Object.keys(plots));
+    
+    // Chart rendering function with better error handling
+    function renderChart(plotData, elementId, chartName) {
+        try {
+            console.log(`🎯 Rendering ${chartName}...`);
+            
+            if (!plotData) {
+                console.error(`❌ No data for ${chartName}`);
+                document.getElementById(elementId).innerHTML = 
+                    `<div class="alert alert-warning">No data available for ${chartName}</div>`;
+                return false;
+            }
+            
+            const data = JSON.parse(plotData);
+            const config = {
+                responsive: true,
+                displayModeBar: false,
+                showTips: true
+            };
+            
+            Plotly.newPlot(elementId, data.data, data.layout, config);
+            console.log(`✅ ${chartName} rendered successfully`);
+            return true;
+            
+        } catch (error) {
+            console.error(`❌ Error rendering ${chartName}:`, error);
+            document.getElementById(elementId).innerHTML = 
+                `<div class="alert alert-danger">Error loading ${chartName}: ${error.message}<br>
+                <button class="btn btn-sm btn-outline-primary mt-2" onclick="location.reload()">Reload Page</button></div>`;
+            return false;
+        }
+    }
+    
+    // Render all charts
+    console.log("🚀 Starting to render all charts...");
+    console.log("📊 Total plots available:", Object.keys(plots).length);
+    
+    // Chart order: satisfaction, goals, trends, gauge, service satisfaction, service distribution, length of stay
+    console.log("🎯 Rendering Chart 1: Client Satisfaction Distribution");
+    renderChart(plots.satisfaction_dist, 'satisfaction-dist-chart', 'Client Satisfaction Distribution');
+    
+    console.log("🎯 Rendering Chart 2: Goal Achievement by Service Type");
+    renderChart(plots.service_goals, 'service-goals-chart', 'Goal Achievement by Service Type');
+    
+    console.log("🎯 Rendering Chart 3: Monthly Performance Trends");
+    renderChart(plots.monthly_trends, 'monthly-trends-chart', 'Monthly Performance Trends');
+    
+    console.log("🎯 Rendering Chart 4: CARF Compliance Gauge");
+    if (plots.compliance_gauge) {
+        console.log("🔍 CARF Gauge data preview:", plots.compliance_gauge.substring(0, 200) + "...");
+    }
+    renderChart(plots.compliance_gauge, 'compliance-gauge-chart', 'CARF Compliance Gauge');
+    
+    console.log("🎯 Rendering Chart 5: Average Satisfaction by Service");
+    renderChart(plots.service_satisfaction, 'service-satisfaction-chart', 'Average Satisfaction by Service');
+    
+    console.log("🎯 Rendering Chart 6: Client Distribution by Service");
+    renderChart(plots.service_distribution, 'service-distribution-chart', 'Client Distribution by Service');
+    
+    console.log("🎯 Rendering Chart 7: Length of Stay Analysis");
+    renderChart(plots.length_of_stay, 'length-of-stay-chart', 'Length of Stay Analysis');
+    
+    console.log("✅ All 7 charts rendering initiated");
+    
+    // Debug: Check which plots are actually available
+    console.log("🔍 Debug - Available plot keys:", Object.keys(plots));
+    const expectedCharts = ['satisfaction_dist', 'service_goals', 'monthly_trends', 'compliance_gauge', 
+                           'service_satisfaction', 'service_distribution', 'length_of_stay'];
+    const missingCharts = expectedCharts.filter(chart => !plots[chart]);
+    if (missingCharts.length > 0) {
+        console.error("❌ Missing charts:", missingCharts);
+    } else {
+        console.log("✅ All expected charts found in plots data");
+    }
+    
+    // Check if Length of Stay data exists
+    if (plots.length_of_stay) {
+        console.log("✅ Length of Stay chart data is available");
+    } else {
+        console.error("❌ Length of Stay chart data is missing!");
+    };
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        console.log("🔄 Resizing charts...");
+        const chartIds = [
+            'satisfaction-dist-chart', 'service-goals-chart', 'monthly-trends-chart',
+            'compliance-gauge-chart', 'service-satisfaction-chart', 'service-distribution-chart', 
+            'length-of-stay-chart'
+        ];
+        
+        chartIds.forEach(id => {
+            const element = document.getElementById(id);
+            if (element && element._plotly_module) {
+                Plotly.Plots.resize(element);
+                console.log(`✅ Resized chart: ${id}`);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

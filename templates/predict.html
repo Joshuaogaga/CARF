@@ -1,0 +1,387 @@
+<!-- FIXED predict.html with proper spacing - Replace your predict.html: -->
+
+{% extends "base.html" %}
+
+{% block title %}CARF Accreditation Predictor - Healthcare Quality Analytics{% endblock %}
+
+{% block content %}
+<!-- Page Header - FIXED WITH PROPER SPACING -->
+<div class="container-fluid" style="margin-top: 3rem;">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-4 py-4" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; margin-top: 1rem;">
+                <h1 class="text-primary mb-2">
+                    <i class="fas fa-brain me-2"></i>CARF Accreditation Predictor
+                </h1>
+                <p class="text-muted mb-0 lead">
+                    <i class="fas fa-robot me-2"></i>AI model trained on {{ total_clients }} healthcare records
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container dashboard-container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h4><i class="fas fa-edit me-2"></i>Enter Your Organization's Metrics</h4>
+                    <p class="text-muted mb-0">Input your healthcare quality metrics below to predict the likelihood of CARF accreditation success.</p>
+                </div>
+                <div class="card-body">
+                    <form id="predictionForm">
+                        <div class="row">
+                            <!-- Row 1: Client Outcomes -->
+                            <div class="col-md-6 mb-4">
+                                <label for="satisfaction_score" class="form-label">
+                                    <i class="fas fa-star text-warning"></i> <strong>Client Satisfaction Score (1-5)</strong>
+                                    <small class="text-success d-block">CARF Target: ≥ 4.0</small>
+                                </label>
+                                <input type="number" class="form-control" id="satisfaction_score" name="satisfaction_score" 
+                                       value="4.0" min="1" max="5" step="0.1" required>
+                                <small class="form-text text-muted">Average satisfaction rating from client surveys</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="goal_achievement_rate" class="form-label">
+                                    <i class="fas fa-target text-primary"></i> <strong>Goal Achievement Rate (%)</strong>
+                                    <small class="text-success d-block">CARF Target: ≥ 80%</small>
+                                </label>
+                                <input type="number" class="form-control" id="goal_achievement_rate" name="goal_achievement_rate" 
+                                       value="75" min="0" max="100" step="1" required>
+                                <small class="form-text text-muted">Percentage of treatment goals achieved by clients</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Row 2: Process Timeliness -->
+                            <div class="col-md-6 mb-4">
+                                <label for="referral_to_intake_days" class="form-label">
+                                    <i class="fas fa-clock text-info"></i> <strong>Referral to Intake Days</strong>
+                                    <small class="text-success d-block">CARF Target: ≤ 14 days</small>
+                                </label>
+                                <input type="number" class="form-control" id="referral_to_intake_days" name="referral_to_intake_days" 
+                                       value="7" min="0" max="60" step="0.1" required>
+                                <small class="form-text text-muted">Average days from referral to intake appointment</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="assessment_completion_days" class="form-label">
+                                    <i class="fas fa-clipboard-check text-info"></i> <strong>Assessment Completion Days</strong>
+                                    <small class="text-success d-block">CARF Target: ≤ 7 days</small>
+                                </label>
+                                <input type="number" class="form-control" id="assessment_completion_days" name="assessment_completion_days" 
+                                       value="5" min="0" max="30" step="0.1" required>
+                                <small class="form-text text-muted">Average days to complete initial assessment</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Row 3: Treatment Planning & Documentation -->
+                            <div class="col-md-6 mb-4">
+                                <label for="care_plan_days" class="form-label">
+                                    <i class="fas fa-file-medical text-info"></i> <strong>Care Plan Development Days</strong>
+                                    <small class="text-success d-block">CARF Target: ≤ 5 days</small>
+                                </label>
+                                <input type="number" class="form-control" id="care_plan_days" name="care_plan_days" 
+                                       value="3" min="0" max="21" step="0.1" required>
+                                <small class="form-text text-muted">Average days to develop individualized care plan</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="documentation_compliance_pct" class="form-label">
+                                    <i class="fas fa-file-alt text-primary"></i> <strong>Documentation Compliance (%)</strong>
+                                    <small class="text-success d-block">CARF Target: ≥ 95%</small>
+                                </label>
+                                <input type="number" class="form-control" id="documentation_compliance_pct" name="documentation_compliance_pct" 
+                                       value="90" min="0" max="100" step="1" required>
+                                <small class="form-text text-muted">Percentage of required documentation completed</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Row 4: Medication Management -->
+                            <div class="col-md-6 mb-4">
+                                <label for="medication_error_rate" class="form-label">
+                                    <i class="fas fa-pills text-danger"></i> <strong>Medication Errors (per client)</strong>
+                                    <small class="text-success d-block">CARF Target: ≤ 0.01</small>
+                                </label>
+                                <input type="number" class="form-control" id="medication_error_rate" name="medication_error_rate" 
+                                       value="0.01" min="0" max="1" step="0.001" required>
+                                <small class="form-text text-muted">Average number of medication errors per client</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="medication_adherence_pct" class="form-label">
+                                    <i class="fas fa-check-circle text-success"></i> <strong>Medication Adherence (%)</strong>
+                                    <small class="text-success d-block">CARF Target: ≥ 85%</small>
+                                </label>
+                                <input type="number" class="form-control" id="medication_adherence_pct" name="medication_adherence_pct" 
+                                       value="85" min="0" max="100" step="1" required>
+                                <small class="form-text text-muted">Percentage of clients adhering to medication regimens</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Row 5: Medication Review Timeline -->
+                            <div class="col-md-6 mb-4">
+                                <label for="med_review_days" class="form-label">
+                                    <i class="fas fa-stethoscope text-info"></i> <strong>Medication Review Days</strong>
+                                    <small class="text-success d-block">CARF Target: ≤ 30 days</small>
+                                </label>
+                                <input type="number" class="form-control" id="med_review_days" name="med_review_days" 
+                                       value="20" min="0" max="90" step="1" required>
+                                <small class="form-text text-muted">Average days between medication reviews</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-calculator"></i> Predict Accreditation Likelihood
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right sidebar with model info -->
+        <div class="col-lg-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5><i class="fas fa-robot"></i> AI Model Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h2 class="text-primary">{{ "%.1f"|format(model_accuracy) }}%</h2>
+                        <p class="text-muted mb-0">Model Accuracy</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6><i class="fas fa-cogs"></i> How it works:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-chart-line text-primary"></i> Analyzes 9 key CARF quality metrics</li>
+                            <li><i class="fas fa-database text-success"></i> Trained on {{ total_clients }} client records</li>
+                            <li><i class="fas fa-brain text-info"></i> Uses Random Forest machine learning</li>
+                            <li><i class="fas fa-percentage text-warning"></i> Provides probability-based predictions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card chart-card mt-3">
+                <div class="card-header">
+                    <h6><i class="fas fa-info-circle"></i> Prediction Guide</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <span class="badge bg-success me-2">High Likelihood (80%+)</span>
+                        <small>Excellent performance across all metrics. Very likely to receive accreditation.</small>
+                    </div>
+                    <div class="mb-3">
+                        <span class="badge bg-warning me-2">Moderate (60-79%)</span>
+                        <small>Good performance with some improvement areas. Follow recommendations.</small>
+                    </div>
+                    <div class="mb-3">
+                        <span class="badge bg-danger me-2">Low Likelihood (<60%)</span>
+                        <small>Significant improvements needed across multiple metrics.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('predictionForm');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+        submitBtn.disabled = true;
+        
+        // Collect all 9 form values
+        const formData = new FormData();
+        formData.append('satisfaction_score', document.getElementById('satisfaction_score').value);
+        formData.append('goal_achievement_rate', document.getElementById('goal_achievement_rate').value);
+        formData.append('referral_to_intake_days', document.getElementById('referral_to_intake_days').value);
+        formData.append('assessment_completion_days', document.getElementById('assessment_completion_days').value);
+        formData.append('care_plan_days', document.getElementById('care_plan_days').value);
+        formData.append('documentation_compliance_pct', document.getElementById('documentation_compliance_pct').value);
+        formData.append('medication_error_rate', document.getElementById('medication_error_rate').value);
+        formData.append('medication_adherence_pct', document.getElementById('medication_adherence_pct').value);
+        formData.append('med_review_days', document.getElementById('med_review_days').value);
+        
+        fetch('/predict_accreditation', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Display comprehensive results
+            displayPredictionResults(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Prediction failed: ' + error.message);
+        })
+        .finally(() => {
+            // Restore button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+});
+
+function displayPredictionResults(data) {
+    // Create results container if it doesn't exist
+    let resultsContainer = document.getElementById('predictionResults');
+    if (!resultsContainer) {
+        resultsContainer = document.createElement('div');
+        resultsContainer.id = 'predictionResults';
+        resultsContainer.className = 'mt-4';
+        document.querySelector('.col-lg-8 .card').after(resultsContainer);
+    }
+    
+    // Build comprehensive results HTML
+    resultsContainer.innerHTML = `
+        <div class="card border-${data.likelihood_color}">
+            <div class="card-header bg-${data.likelihood_color} text-white">
+                <h4><i class="fas fa-certificate"></i> CARF Accreditation Prediction Results</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-4 text-center">
+                        <h2 class="text-${data.likelihood_color} mb-1">${data.probability}</h2>
+                        <p class="text-muted mb-0">Likelihood Score</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4 class="text-${data.likelihood_color} mb-1">${data.metrics_passed}</h4>
+                        <p class="text-muted mb-0">CARF Metrics Passed</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h4 class="text-${data.likelihood_color} mb-1">${data.compliance_rate}</h4>
+                        <p class="text-muted mb-0">Compliance Rate</p>
+                    </div>
+                </div>
+                
+                <div class="alert alert-${data.likelihood_color} mb-4">
+                    <h5><i class="fas fa-info-circle"></i> ${data.prediction}</h5>
+                    <p class="mb-0"><strong>Confidence Level:</strong> ${data.confidence}</p>
+                </div>
+                
+                ${data.priority_issues && data.priority_issues.length > 0 ? `
+                <div class="alert alert-warning mb-4">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Priority Issues Requiring Attention:</h6>
+                    <ul class="mb-0">
+                        ${data.priority_issues.map(issue => `<li>${issue}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+                
+                <div class="mb-4">
+                    <h6><i class="fas fa-chart-bar"></i> CARF Metrics Performance:</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Current</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.compliance_details ? data.compliance_details.map(detail => `
+                                    <tr class="${detail.meets_target ? 'table-success' : 'table-warning'}">
+                                        <td>${detail.metric}</td>
+                                        <td>${detail.current}</td>
+                                        <td>${detail.operator} ${detail.target}</td>
+                                        <td>
+                                            ${detail.meets_target ? 
+                                                '<span class="badge bg-success">✓ Meets Target</span>' : 
+                                                '<span class="badge bg-warning">⚠ Below Target</span>'}
+                                        </td>
+                                        <td>${detail.score.toFixed(1)}/100</td>
+                                    </tr>
+                                `).join('') : ''}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h6><i class="fas fa-lightbulb"></i> Recommendations for Improvement:</h6>
+                    <div class="row">
+                        ${data.recommendation.map((rec, index) => `
+                            <div class="col-md-6 mb-2">
+                                <div class="alert alert-info py-2 mb-2">
+                                    <small>${rec}</small>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button class="btn btn-primary me-2" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print Report
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('predictionResults').style.display='none'">
+                        <i class="fas fa-times"></i> Close Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Scroll to results
+    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Add real-time validation feedback
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('#predictionForm input[type="number"]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            
+            // Simple visual feedback based on CARF targets
+            if (this.id === 'satisfaction_score') {
+                this.className = value >= 4.0 ? 'form-control is-valid' : 'form-control is-warning';
+            } else if (this.id === 'goal_achievement_rate') {
+                this.className = value >= 80 ? 'form-control is-valid' : 'form-control is-warning';
+            } else if (this.id === 'documentation_compliance_pct') {
+                this.className = value >= 95 ? 'form-control is-valid' : 'form-control is-warning';
+            } else if (this.id === 'medication_adherence_pct') {
+                this.className = value >= 85 ? 'form-control is-valid' : 'form-control is-warning';
+            } else if (this.id.includes('days')) {
+                // For timeline metrics, lower is better
+                const targets = {
+                    'referral_to_intake_days': 14,
+                    'assessment_completion_days': 7,
+                    'care_plan_days': 5,
+                    'med_review_days': 30
+                };
+                const target = targets[this.id];
+                this.className = value <= target ? 'form-control is-valid' : 'form-control is-warning';
+            } else if (this.id === 'medication_error_rate') {
+                this.className = value <= 0.01 ? 'form-control is-valid' : 'form-control is-warning';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

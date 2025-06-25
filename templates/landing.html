@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Healthcare Quality Analytics{% endblock %}
+
+{% block content %}
+<!-- Add spacer for navbar gap -->
+<div style="height: 2rem;"></div>
+
+<div class="landing-page">
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-title">Healthcare Quality Analytics</div>
+        <div class="hero-subtitle">Comprehensive CARF accreditation analytics and quality improvement platform</div>
+        
+        <div class="mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-tachometer-alt me-2"></i>View Dashboard
+            </a>
+            <a href="#features" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-info-circle me-2"></i>Learn More
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="text-primary">Platform Features</h2>
+                <p class="lead">Comprehensive tools for healthcare quality management and CARF compliance</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card kpi-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Real-time Analytics</h5>
+                        <p class="card-text">Monitor key performance indicators, client satisfaction, and goal achievement rates in real-time with interactive dashboards.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card kpi-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-certificate fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">CARF Compliance</h5>
+                        <p class="card-text">Track compliance with CARF standards, monitor quality metrics, and generate comprehensive compliance reports.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card kpi-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-brain fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Predictive Analytics</h5>
+                        <p class="card-text">Use machine learning models to predict accreditation outcomes and identify areas for improvement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <div class="card kpi-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lightbulb fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">Smart Recommendations</h5>
+                        <p class="card-text">Get automated recommendations for quality improvement based on your data patterns and compliance gaps.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card kpi-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-upload fa-3x text-secondary mb-3"></i>
+                        <h5 class="card-title">Data Integration</h5>
+                        <p class="card-text">Upload your own healthcare data or use our demo dataset to explore the platform's capabilities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="upload-section" class="py-5 bg-light rounded">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="text-primary">Get Started</h2>
+                <p class="lead">Upload your healthcare data files to begin analysis</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ url_for('upload_files') }}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="files" class="form-label">
+                                    <i class="fas fa-file-csv me-2"></i>Select Healthcare Data Files
+                                </label>
+                                <input type="file" class="form-control" id="files" name="files" multiple accept=".csv,.xlsx,.xls">
+                                <div class="form-text">
+                                    Supported formats: CSV, Excel (XLSX, XLS). Maximum file size: 16MB.
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-info-circle me-2"></i>Required Files:
+                                </h6>
+                                <ul class="mb-0">
+                                    <li><strong>healthcare_client_data.csv</strong> - Client information and outcomes</li>
+                                    <li><strong>monthly_quality_metrics.csv</strong> - Monthly performance summaries</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-upload me-2"></i>Upload Data
+                                </button>
+                                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-play me-2"></i>Use Demo Data
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="display-4 text-primary">1000+</div>
+                <h6>Client Records</h6>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="display-4 text-success">90%</div>
+                <h6>Satisfaction Rate</h6>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="display-4 text-warning">74.7%</div>
+                <h6>Goal Achievement</h6>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="display-4 text-info">9</div>
+                <h6>CARF Metrics</h6>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="card bg-primary text-white">
+                    <div class="card-body py-5">
+                        <h3>Ready to Improve Your Healthcare Quality?</h3>
+                        <p class="lead">Start analyzing your data today and achieve CARF compliance excellence.</p>
+                        <a href="{{ url_for('index') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-rocket me-2"></i>Launch Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // File upload validation
+    const fileInput = document.getElementById('files');
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const maxSize = 16 * 1024 * 1024; // 16MB
+            const allowedTypes = ['.csv', '.xlsx', '.xls'];
+            
+            let hasError = false;
+            files.forEach(file => {
+                const extension = '.' + file.name.split('.').pop().toLowerCase();
+                
+                if (file.size > maxSize) {
+                    alert(`File ${file.name} is too large. Maximum size is 16MB.`);
+                    hasError = true;
+                }
+                
+                if (!allowedTypes.includes(extension)) {
+                    alert(`File ${file.name} has an unsupported format. Use CSV or Excel files.`);
+                    hasError = true;
+                }
+            });
+            
+            if (hasError) {
+                e.target.value = '';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

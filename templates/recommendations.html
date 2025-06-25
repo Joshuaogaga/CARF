@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendations - Healthcare Quality Analytics{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary mb-4">
+                <i class="fas fa-lightbulb me-2"></i>Quality Improvement Recommendations
+            </h2>
+        </div>
+    </div>
+
+    {% if recommendations_data %}
+    <!-- Summary Overview -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="text-warning">{{ recommendations_data.total_recommendations }}</h3>
+                    <p class="mb-0">Priority Areas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="{{ 'text-success' if recommendations_data.overall_score >= 80 else 'text-warning' if recommendations_data.overall_score >= 60 else 'text-danger' }}">
+                        {{ "%.1f"|format(recommendations_data.overall_score) }}%
+                    </h3>
+                    <p class="mb-0">Overall Score</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card kpi-card">
+                <div class="card-body text-center">
+                    <h3 class="text-info">{{ 9 - recommendations_data.total_recommendations }}</h3>
+                    <p class="mb-0">Targets Met</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if recommendations_data.priority_areas %}
+    <!-- Priority Recommendations -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="text-secondary mb-3">Priority Improvement Areas</h4>
+        </div>
+    </div>
+
+    {% for recommendation in recommendations_data.priority_areas %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                                {{ recommendation.area }}
+                            </h5>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <span class="badge bg-danger">
+                                Current: {{ recommendation.current_value }}
+                            </span>
+                            <span class="badge bg-success">
+                                Target: {{ recommendation.target_value }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-primary">Recommended Actions:</h6>
+                    <div class="row">
+                        {% for action in recommendation.actions %}
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span>{{ action }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <!-- No Recommendations Needed -->
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-trophy fa-3x text-success me-4"></i>
+                    <div>
+                        <h4 class="alert-heading">Excellent Performance!</h4>
+                        <p class="mb-0">You're meeting all CARF compliance targets. Keep up the outstanding work!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- General Best Practices -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4 class="text-secondary mb-3">General Best Practices</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users text-primary me-2"></i>Client Engagement
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Regular satisfaction surveys</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Client feedback sessions</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Personalized treatment plans</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Family involvement programs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-clipboard-check text-info me-2"></i>Documentation Excellence
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Electronic health records</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Standardized templates</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Regular audits</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Staff training programs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-shield-alt text-success me-2"></i>Safety & Quality
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Medication safety protocols</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Incident reporting systems</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Regular safety training</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Quality improvement committees</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line text-warning me-2"></i>Continuous Monitoring
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-success me-2"></i>Monthly performance reviews</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Real-time dashboards</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Trend analysis</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Predictive analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Implementation Timeline -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i>Implementation Timeline
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="border-start border-primary border-4 ps-3">
+                                <h6 class="text-primary">Immediate (1-30 days)</h6>
+                                <small>Critical compliance gaps</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="border-start border-warning border-4 ps-3">
+                                <h6 class="text-warning">Short-term (1-3 months)</h6>
+                                <small>Process improvements</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="border-start border-info border-4 ps-3">
+                                <h6 class="text-info">Medium-term (3-6 months)</h6>
+                                <small>System enhancements</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="border-start border-success border-4 ps-3">
+                                <h6 class="text-success">Long-term (6+ months)</h6>
+                                <small>Continuous improvement</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">No Recommendations Available</h4>
+        <p>Recommendation data is not currently available. Please ensure compliance data has been calculated.</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{{ url_for('landing') }}" class="btn btn-outline-warning">Go to Home Page</a>
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+            </a>
+            <a href="{{ url_for('analysis') }}" class="btn btn-info btn-lg me-3">
+                <i class="fas fa-chart-line me-2"></i>View Analysis
+            </a>
+            <a href="{{ url_for('predict') }}" class="btn btn-warning btn-lg">
+                <i class="fas fa-brain me-2"></i>View Predictions
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
