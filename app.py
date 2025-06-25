@@ -1142,27 +1142,20 @@ def recommendations():
 @app.route('/load_demo')
 def load_demo():
     try:
-        # Ensure uploads directory exists
-        upload_dir = 'uploads'
-        if not os.path.exists(upload_dir):
-            os.makedirs(upload_dir)
-        
-        # Copy demo files to uploads directory  
-        demo_files = [
-            'healthcare_client_data.csv',
-            'monthly_quality_metrics.csv'
-        ]
-        
-        for demo_file in demo_files:
-            if os.path.exists(demo_file):
-                filename = os.path.basename(demo_file)
-                shutil.copy(demo_file, os.path.join(upload_dir, filename))
+        # Check if demo files exist in root directory
+        if os.path.exists('healthcare_client_data.csv') and os.path.exists('monthly_quality_metrics.csv'):
+            # Reinitialize the application with existing data
+            success = initialize_application()
+            
+            if success:
+                flash('Demo data loaded successfully! Explore the analytics below.', 'success')
+                return redirect(url_for('index'))
             else:
-                flash(f'Demo file {demo_file} not found!', 'error')
+                flash('Error initializing demo data.', 'error')
                 return redirect(url_for('landing'))
-        
-        flash('Demo data loaded successfully! Explore the analytics below.', 'success')
-        return redirect(url_for('index'))
+        else:
+            flash('Demo files not found. Please upload your own data.', 'error')
+            return redirect(url_for('landing'))
         
     except Exception as e:
         flash(f'Error loading demo data: {str(e)}', 'error')
